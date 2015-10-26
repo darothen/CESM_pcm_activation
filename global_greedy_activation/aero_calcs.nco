@@ -1,0 +1,172 @@
+
+// number: 1/kg -> 1/cm3
+nOC=nOC*RHO*1e-6;
+nOC@units="1/cm3";
+nMOS=nMOS*RHO*1e-6;
+nMOS@units="1/cm3";
+nBC=nBC*RHO*1e-6;
+nBC@units="1/cm3";
+nMBS=nMBS*RHO*1e-6;
+nMBS@units="1/cm3";
+nACC=nACC*RHO*1e-6;
+nACC@units="1/cm3";
+nNUC=nNUC*RHO*1e-6;
+nNUC@units="1/cm3";
+nAIT=nAIT*RHO*1e-6;
+nAIT@units="1/cm3";
+nDST01=DST01*RHO*3.484e15*1e-6;
+nDST01@units="1/cm3";
+nDST02=DST02*RHO*2.138e14*1e-6;
+nDST02@units="1/cm3";
+nDST03=DST03*RHO*2.205e13*1e-6;
+nDST03@units="1/cm3";
+nDST04=DST04*RHO*3.165e12*1e-6;
+nDST04@units="1/cm3";
+nSSLT01=SSLT01*RHO*3.2864e14*1e-6;
+nSSLT01@units="1/cm3";
+nSSLT02=SSLT02*RHO*8.6265*12*1e-6;
+nSSLT02@units="1/cm3";
+nSSLT03=SSLT03*RHO*5.0409e11*1e-6;
+nSSLT03@units="1/cm3";
+nSSLT04=SSLT04*RHO*2.6851e10*1e-6;
+nSSLT04@units="1/cm3";
+
+// Total number
+nAERMARC_CCN=nACC+nMOS+nMBS;
+nAERMARC_CCN@long_name="Number conc of MARC CCN modes (ACC, MOS, MBS)";
+nAERMARC=nOC+nMOS+nBC+nMBS+nACC+nAIT+nNUC;
+nAERMARC@long_name="Number conc of MARC modes";
+nAERTOT_CCN=nAERMARC_CCN+nDST01+nDST02+nSSLT01;
+nAERTOT_CCN@long_name="Number conc of total CCN modes";
+nAERTOT=nAERMARC+nDST01+nDST02+nDST03+nDST04+nSSLT01+nSSLT02+nSSLT03+nSSLT04;
+nAERTOT@long_name="Number conc of total aer modes)";
+nAERMARC@units="1/cm3";
+nAERTOT@units="1/cm3";
+nAERMARC_CCN@units="1/cm3";
+nAERTOT_CCN@units="1/cm3";
+
+// mass: kg/kg -> ng/m3
+mOC=mOC*RHO*1e9;
+mOC@units="ng/m3";
+mMOS=mMOS*RHO*1e9;
+mMOS@units="ng/m3";
+mBC=mBC*RHO*1e9;
+mBC@units="ng/m3";
+mMBS=mMBS*RHO*1e9;
+mMBS@units="ng/m3";
+mACC=mACC*RHO*1e9;
+mACC@units="ng/m3";
+mNUC=mNUC*RHO*1e9;
+mNUC@units="ng/m3";
+mAIT=mAIT*RHO*1e9;
+mAIT@units="ng/m3";
+mOIM=mOIM*RHO*1e9;
+mOIM@units="ng/m3";
+mBIM=mBIM*RHO*1e9;
+mBIM@units="ng/m3";
+mDST01=DST01*RHO*1e9;
+mDST01@units="ng/m3";
+mDST02=DST02*RHO*1e9;
+mDST02@units="ng/m3";
+mDST03=DST03*RHO*1e9;
+mDST03@units="ng/m3";
+mDST04=DST04*RHO*1e9;
+mDST04@units="ng/m3";
+mSSLT01=SSLT01*RHO*1e9;
+mSSLT01@units="ng/m3";
+mSSLT02=SSLT02*RHO*1e9;
+mSSLT02@units="ng/m3";
+mSSLT03=SSLT03*RHO*1e9;
+mSSLT03@units="ng/m3";
+mSSLT04=SSLT04*RHO*1e9;
+mSSLT04@units="ng/m3";
+
+// other mode data
+sigmaBC=2.0;
+sigmaBC@units="unitless";
+sigmaBC@long_name="geo. std. dev., black carbon";
+sigmaOC=2.0;
+sigmaOC@units="unitless";
+sigmaOC@long_name="geo. std. dev., organic carbon";
+sigmaNUC=1.59;
+sigmaNUC@units="unitless";
+sigmaNUC@long_name="geo. std. dev., nucleation sulfate";
+sigmaAIT=1.59;
+sigmaAIT@units="unitless";
+sigmaAIT@long_name="geo. std. dev., aitken sulfate";
+sigmaACC=1.59;
+sigmaACC@units="unitless";
+sigmaACC@units="geo. std. dev., accumulation sulfate";
+sigmaMBS=2.0;
+sigmaMBS@units="unitless";
+sigmaMBS@long_name="geo. std. dev., mixed black carbon-sulfate";
+sigmaMOS=2.0;
+sigmaMOS@units="unitless";
+sigmaMOS@long_name="geo. std. dev., mixed organic carbon-sulfate";
+
+*rhoBC=1.8e3;
+*rhoOC=2.0e3;
+*rhoNUC=1.8e3;
+*rhoAIT=1.8e3;
+*rhoACC=1.8e3;
+*rhoMBS=1.8e3;
+*kappaOC=1e-10;
+*kappaSUL=0.507;
+
+
+// Must resolve mixing state of the organic-sulfate mode to compute
+// density and kappa
+rhoMOS=(mOIM*rhoOC+(mMOS-mOIM)*rhoACC)/mMOS;
+rhoMOS@units="kg/m3";
+rhoMOS@long_name="avg. particle density in mixed organic/sulfate mode";
+kappaMOS=(kappaOC*(mOIM*1e-9)/rhoOC+kappaSUL*((mMOS-mOIM)*1e-9)/rhoACC)/(mMOS*1e-9/rhoMOS);
+kappaMOS@units="";
+kappaMOS@long_name="hygroscopicity of mixed organic/sulfate mode";
+
+*pi=3.1415926535;
+
+// mu: 
+//    Assume M is in kg/m3, N is in 1/cm3, rho is in kg/m3. Then, the
+// geometric mode of the corresponding lognormal of width sigma is
+// mu^3 = M*(3/(4pi))*(1/rho)*(1/N)*exp((-9/2)*(log(sigma)^2)) [cm^3]
+*muBCthree=(mBC*1e-9)*(3./(4.*pi))*(1./rhoBC)*(1./nBC)*exp(-4.5*(log(sigmaBC)^2.));
+muBC=muBCthree^(1./3.);
+muBC*=1e4;
+muBC@units="micron";
+muBC@long_name="geo. mean radius, black carbon";
+
+*muOCthree=(mOC*1e-9)*(3./(4.*pi))*(1./rhoOC)*(1./nOC)*exp(-4.5*(log(sigmaOC)^2.));
+muOC=muOCthree^(1./3.);
+muOC*=1e4;
+muOC@units="micron";
+muOC@long_name="geo. mean radius, organic carbon";
+
+*muACCthree=(mACC*1e-9)*(3./(4.*pi))*(1./rhoACC)*(1./nACC)*exp(-4.5*(log(sigmaACC)^2.));
+muACC=muACCthree^(1./3.);
+muACC*=1e4;
+muACC@units="micron";
+muACC@long_name="geo. mean radius, accumulation sulfate";
+
+*muAITthree=(mAIT*1e-9)*(3./(4.*pi))*(1./rhoAIT)*(1./nAIT)*exp(-4.5*(log(sigmaAIT)^2.));
+muAIT=muAITthree^(1./3.);
+muAIT*=1e4;
+muAIT@units="micron";
+muAIT@long_name="geo. mean radius, aitken sulfate";
+
+*muNUCthree=(mNUC*1e-9)*(3./(4.*pi))*(1./rhoNUC)*(1./nNUC)*exp(-4.5*(log(sigmaNUC)^2.));
+muNUC=muNUCthree^(1./3.);
+muNUC*=1e4;
+muNUC@units="micron";
+muNUC@long_name="geo. mean radius, nucleation sulfate";
+
+*muMOSthree=(mMOS*1e-9)*(3./(4.*pi))*(1./rhoMOS)*(1./nMOS)*exp(-4.5*(log(sigmaMOS)^2.));
+muMOS=muMOSthree^(1./3.);
+muMOS*=1e4;
+muMOS@units="micron";
+muMOS@long_name="geo. mean radius, mixed organic carbon-sulfate";
+
+*muMBSthree=(mMBS*1e-9)*(3./(4.*pi))*(1./rhoMBS)*(1./nMBS)*exp(-4.5*(log(sigmaMBS)^2.));
+muMBS=muMBSthree^(1./3.);
+muMBS*=1e4;
+muMBS@units="micron";
+muMBS@long_name="geo. mean radius, mixed black carbon-sulfate";

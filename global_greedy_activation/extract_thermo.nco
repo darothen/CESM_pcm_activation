@@ -1,0 +1,18 @@
+
+*Rd=287.0;
+
+//print("\nComputing pressure...\n");
+P[time,lev,lat,lon]=hyam*P0+hybm*PS;
+P@units=PS@units;
+P@long_name="pressure";
+//P@cell_methods=PS@cell_methods;
+
+//print("Computing density...\n");
+//print("   first computing water vapor mixing ratio\n");
+*w=Q/(1.0-Q);
+//print("   second computing virtual temperature\n");
+*tv=T*(1.0+0.61*w);
+//print("   finally computing density\n");
+RHO=P/(Rd*tv);
+RHO@units="kg/m3";
+RHO@long_name="air density";
