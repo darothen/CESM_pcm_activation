@@ -18,7 +18,7 @@ parser.add_argument("aerosol_ds", type=str, metavar="aerosol_data.nc",
 
 if __name__ == "__main__":
 
-    args = parser.parse_args
+    args = parser.parse_args()
 
     # Read in aerosol dataset
     data = xray.open_dataset(args.aerosol_ds, decode_times=False)
