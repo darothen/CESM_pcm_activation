@@ -1,3 +1,7 @@
+"""
+Plotting utility functions for the comparison box plots.
+"""
+
 import numpy as np
 import pandas as pd
 
