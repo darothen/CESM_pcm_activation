@@ -72,8 +72,8 @@ if __name__ == "__main__":
     data = xray.decode_cf(data)
 
     # Global troposphere slice for quick ref
-    global_tropo = data.sel(lev=slice(500, 1100), lat=slice(-80, 80))
-    global_tropo = global_tropo.isel(time=-1)
+    global_tropo = data.sel(lev=slice(700, 1100), lat=slice(-80, 80))
+    # global_tropo = global_tropo.isel(time=-1)
 
     ####################################################################
 
@@ -84,7 +84,7 @@ if __name__ == "__main__":
         print(lev, lat)
 
         data_subset = data.sel(lev=lev_slice, lat=lat_slice)
-        data_subset = data_subset.isel(time=-1)
+        # data_subset = data_subset.isel(time=-1)
 
         id_str = "{}_{}".format(lev, lat)
 
