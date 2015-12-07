@@ -41,7 +41,7 @@ def calc_ocean_mask(dataset, oceans=oceans, pt_return=False,
     in_ocean = [_is_in_ocean(p, oceans) for p in points]
     return in_ocean
 
-def load_experiment(exp_dir, format='csv'):
+def load_experiment(exp_dir, name="single_timestep", format='csv'):
     """ Load the results from a complete experiment into a DataFrame.
 
     Parameters
@@ -49,12 +49,14 @@ def load_experiment(exp_dir, format='csv'):
     exp_dir : str
         The path to the directory containing the output CSV files
         from the simulations.
+    name : str
+        The name of the experiment files; default is "single_timestep"
     format : str
         Either "csv" or "nc" for loading the correct input
 
     """
 
-    fns = sorted(glob.glob(os.path.join(exp_dir, "*.%s" % format)))
+    fns = sorted(glob.glob(os.path.join(exp_dir, "%s*.%s" % (name, format))))
     print("Found %d files" % len(fns))
 
     if format == 'csv':
