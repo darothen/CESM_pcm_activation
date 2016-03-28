@@ -86,7 +86,7 @@ def compare_boxplots(mode, param, lat_lev_generator, data):
                        order=['global', 'nh', 'tropics', 'sh'],
                        kind='box', aspect=16./10., size=5,
                        whis=[10., 90.], color=mode_colors[mode],
-                       showfliers=False)
+                       showfliers=False, legend_out=True)
 
     plt.semilogy()
     if param == 'mu':
@@ -127,7 +127,7 @@ def compare_maritime_vs_continent(mode, param, data):
     g = sns.factorplot(x='lat', y=mode, hue='region', data=all_df,
                        palette=dict(maritime='b', continent='grey'),
                        kind='box', aspect=16./10., size=5, whis=[10., 90.],
-                       showfliers=False)
+                       showfliers=False, legend_out=True)
 
     plt.semilogy()
     if param == 'mu':
