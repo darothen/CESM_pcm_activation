@@ -8,6 +8,8 @@ import pandas as pd
 import numpy as np
 import sklearn.metrics as skm
 
+from utils import summary_stats
+
 from argparse import ArgumentParser, RawDescriptionHelpFormatter
 parser = ArgumentParser(description=__doc__,
                         formatter_class=RawDescriptionHelpFormatter)
@@ -18,29 +20,9 @@ parser.add_argument("parameterizations", type=str, nargs="+",
                          " sampling results")
 parser.add_argument("-e", "--exp-name", type=str, default='',
                     help="Name to label experiment; else infer from datafile")
-
-
-def compute_stats(obs, act):
-    """ Create a dictionary with summary statistics comparing two
-    datasets. """
-
-    mae = skm.mean_absolute_error(act, obs)
-    r2 = skm.r2_score(act, obs)
-    rmse = np.sqrt(np.sum((obs-act)**2.)/len(act))
-    nrmse = rmse/np.sqrt(np.sum((act**2.)/len(act)))
-
-    rel_err = 100.*(obs - act)/act
-    # Mask egregiously high values (1000% error) which screw up the spread
-    rel_err = rel_err[np.abs(rel_err) <= 1000.]
-    mre = np.mean(rel_err)
-    mre_std = np.std(rel_err)
-
-    stats = {
-        'mae': mae, 'r2': r2, 'rmse': rmse, 'nrmse': nrmse,
-        'mre': mre, 'mre_std': mre_std,
-    }
-
-    return stats
+parser.add_argument("-o", "--output", type=str,
+                    help="Name of output file; else, will write "
+                         "{exp_name}_stats_processed.p")
 
 
 def result_key(output, name, val=0):
@@ -72,10 +54,10 @@ def compute_stats_vs_parcel(df, output, param, output_parcel=None,
     data_df.dropna(inplace=True)
 
     results = {}
-    results['log10'] = compute_stats(data_df[key_param],
+    results['log10'] = summary_stats(data_df[key_param],
                                      data_df[key_parcel])
     data_df = 10.**(data_df)
-    results['normal'] = compute_stats(data_df[key_param],
+    results['normal'] = summary_stats(data_df[key_param],
                                       data_df[key_parcel])
 
     return results
@@ -137,4 +119,8 @@ if __name__ == "__main__":
     all_df.index.name = "scheme"
 
     # Write output
-    all_df.to_pickle("{}_stats_processed.p".format(exp_name))
+    if not args.output:
+        out_fn = "{}_stats_processed.p".format(exp_name)
+    else:
+        out_fn = args.output
+    all_df.to_pickle(out_fn)

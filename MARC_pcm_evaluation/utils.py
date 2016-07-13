@@ -6,6 +6,7 @@ experiment. """
 import os, pickle
 import numpy as np
 import pandas as pd
+import sklearn.metrics as skm
 from statsmodels.distributions import ECDF
 
 import matplotlib.pyplot as plt
@@ -13,9 +14,8 @@ import matplotlib as mpl
 import seaborn as sns
 sns.set(style='ticks', context='talk')
 
-
 def get_data(exp_name, data_root="data/", tidy=False):
-    """ Load a DataFrame with the sampling results from a given
+    """ Load a DataFrame with the raw sampling results from a given
     experiment. """
     path_to_data = os.path.join(data_root, exp_name)
     which = "tidy" if tidy else "results"
@@ -31,7 +31,7 @@ def get_data(exp_name, data_root="data/", tidy=False):
 
 def get_stats(exp_name, result='Smax',
               scaling='normal', override=False):
-    """ Retrieve the statistics from the sampling experiments.
+    """ Retrieve the pre-computed statistics from the sampling experiments.
 
     Parameters
     ----------
@@ -55,6 +55,30 @@ def get_stats(exp_name, result='Smax',
     s = s.T.xs(scaling, level='scaling').T
 
     return s
+
+
+def summary_stats(obs, act):
+    """ Create a Series with summary statistics comparing two
+    array-like datasets. """
+
+    mae = skm.mean_absolute_error(act, obs)
+    r2 = skm.r2_score(act, obs)
+    rmse = np.sqrt(np.sum((obs-act)**2.)/len(act))
+    nrmse = rmse/np.sqrt(np.sum((act**2.)/len(act)))
+
+    rel_err = 100.*(obs - act)/act
+    # Mask egregiously high values (1000% error) which screw up the spread
+    rel_err = rel_err[np.abs(rel_err) <= 1000.]
+    mre = np.mean(rel_err)
+    mre_std = np.std(rel_err)
+
+    stats = pd.Series({
+        'mae': mae, 'r2': r2, 'rmse': rmse, 'nrmse': nrmse,
+        'mre': mre, 'mre_std': mre_std,
+    })
+
+    return stats
+
 
 def clean_df(df, lower, upper):
     """ Clean a DataFrame by dropping values outside the range
