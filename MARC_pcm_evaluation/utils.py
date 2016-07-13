@@ -56,6 +56,29 @@ def get_stats(exp_name, result='Smax',
 
     return s
 
+def clean_df(df, lower, upper):
+    """ Clean a DataFrame by dropping values outside the range
+    [lower, upper]
+
+    Parameters
+    ----------
+    df : DataFrame
+        The DataFrame to clip
+    lower, upper : floats
+        Lower and upper bound of valid data range
+
+    """
+
+    df[df > upper] = np.nan
+    df[df < lower] = np.nan
+    df = (
+        df
+        .replace([np.inf, -np.inf], np.nan)
+        .dropna()
+    )
+
+    return df
+
 
 def plot_oneone(parcel_data, param_data, var_label, param_label,
                 color_data=None, color_lognorm=True,
