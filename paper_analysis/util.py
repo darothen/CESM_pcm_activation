@@ -6,6 +6,7 @@ import numpy as np
 import pandas as pd
 
 import matplotlib.pyplot as plt
+import matplotlib.patches as mpatches
 import seaborn as sns
 
 from collections import OrderedDict
@@ -17,16 +18,16 @@ mode_colors = {
     'ACC': '#ef3b2c',
     # Organic - green
     'OC': '#4daf4a',
-    'MOS': '#ffff00', # green + red = yellow
+    'MOS': '#ffaa00', # green + red = yellow
     # Black - blue,
     'BC': '#377eb8',
     'MBS': '#984ea3', # blue + red = purple
     # Dust - shades of brown
-    'DST01': '#f6e8c3', 'DST02': '#dfc27d',
-    'DST03': '#bf812d', 'DST04': '#8c510a',
+    'DST04': '#f6e8c3', 'DST03': '#dfc27d',
+    'DST02': '#bf812d', 'DST01': '#8c510a',
     # Sea Salt - shades of teal
-    'SSLT01': '#c7eae5', 'SSLT02': '#80cdc1',
-    'SSLT03': '#35978f', 'SSLT04': '#01665e',
+    'SSLT04': '#c7eae5', 'SSLT03': '#80cdc1',
+    'SSLT02': '#35978f', 'SSLT01': '#01665e',
 }
 all_modes = ['NUC', 'AIT', 'ACC', 'OC', 'MOS', 'BC', 'MBS',
              'DST01', 'DST02', 'DST03', 'DST04',
@@ -47,6 +48,69 @@ lats = {
 }
 
 time_subset = slice("2001-10", None)
+
+
+def colortext_legend(text_color_map, ax=None, text_labels=None, **kwargs):
+    """ Add a custom-built legend to a plot, where all the items in
+    the legend have colored text corresponding to colored elements
+    in the figure.
+
+    Parameters:
+    -----------
+    text_color_map : dict
+        A mapping from labels -> colors which will be used to construct
+        the patch elements to include in the legend.
+    ax : Axes
+        The axes instance on which to add the legend. If not passed,
+        then the legend will simply be created and returned.
+    text_labels : dict
+        A mapping from labels -> longer descriptions to be used in their
+        place in the legend.
+    **kwargs : dict-like
+        Additional arguments to pass to the legend function.
+
+    Returns:
+    --------
+    leg : legend object
+        The legend, for further customization
+
+    """
+
+    legend_elems = []
+    labels = []
+    for text, color in text_color_map.items():
+        legend_elems.append(
+            ( mpatches.Rectangle((0, 0), 1, 1,
+                                 facecolor='none',
+                                 edgecolor='none'),
+              text )
+        )
+        labels.append(text)
+
+    # Set up a legend with colored-text elements
+    elems, texts = zip(*legend_elems)
+    if ax is not None:
+        ax.legend(elems, texts, **kwargs)
+        leg = ax.get_legend()
+    else:
+        leg = plt.legend(elems, texts, **kwargs)
+
+    # Change the label color
+    for label in leg.get_texts():
+        old_label = label.get_text()
+        if text_labels is None:
+            new_label = old_label
+        else:
+            try:
+                new_label = text_labels[old_label]
+            except KeyError:
+                new_label = old_label
+
+        plt.setp(label, color=text_color_map[old_label])
+        label.set_text(new_label)
+
+    return leg
+
 
 def compare_boxplots(mode, param, lat_lev_generator, data):
 

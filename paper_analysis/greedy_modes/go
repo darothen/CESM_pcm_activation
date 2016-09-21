@@ -1,0 +1,4 @@
+#/usr/bin/env bash
+open -a "Google Chrome" http://localhost:8000/mode.html
+echo "Reload browser..."
+python -m http.server 8000

@@ -10,3 +10,4 @@ Analyses for setting up chaos expansion activation parameterization in CESM.
 3. [`aerosol_dists`](./aerosol_dists/) - Plot aerosol size distribution statistics from a reference model simulation.
 4. [`global_greedy_activation`](./global_greedy_activation/README.md) - Iterative, greedy calculation to analyze which aerosol modes dominate activation dynamics.
 5. [`MARC_pcm_evaluation`](./MARC_pcm_evaluation/README.md) - Plots and analyses for sampling evaluation of chaos activation schemes.
+6. [`paper_analysis`](./paper_analysis) - Collection of notebooks reproducing the *specific* figures and tables from the MARC activation emulator manuscript.

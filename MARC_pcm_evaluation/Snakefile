@@ -1,26 +1,11 @@
 
 EXP_NAMES = ["gCCN", "main"]
 
+# Summary plots
 rule batch_plots:
 	input:
 		"oneone.done", "oneone_MARC_aerosol.done",
 		"cdf.done", "sobol.done"
-
-rule process:
-	input:
-		expand("data/MARC_{scheme}_sampling_data.h5", scheme=EXP_NAMES)
-
-rule _process:
-	input:
-		"data/MARC_{scheme}/MARC_{scheme}_sampling_results.csv",
-		"data/aerosol_sampling/MARC_{scheme}_aerosol_design_parameterization_results.csv"
-	output:
-		"data/MARC_{scheme}_sampling_data.h5"
-	params:
-		nb="process_original.ipynb",
-		scheme="{scheme}"
-	shell:
-		"exp_name={params.scheme} ./run_notebook.sh {params.nb}"
 
 rule oneone:
 	output: touch("oneone.done")
@@ -45,3 +30,35 @@ rule cdf:
 rule sobol:
 	output: touch("sobol.done")
 	shell: "./run_notebook.sh sobol_decomp.ipynb"
+
+# Statistics tables
+rule stats_tables:
+	input:
+		expand("data/MARC_{scheme}_stats.p", scheme=EXP_NAMES)
+
+rule _stats:
+	input:
+		"data/MARC_{scheme}/MARC_{scheme}_sampling_results.csv",
+		"data/MARC_{scheme}_sampling_data.h5"
+	output: "data/MARC_{scheme}_stats.p"
+	params:
+		schemes="{scheme}_3 {scheme}_4 ARG MBN"
+	shell:
+		"python compute_stats.py -o {output} {input[0]} {params.schemes}"
+
+# Re-process sampling data
+rule process:
+	input:
+		expand("data/MARC_{scheme}_sampling_data.h5", scheme=EXP_NAMES)
+
+rule _process_sampling:
+	input:
+		"data/MARC_{scheme}/MARC_{scheme}_sampling_results.csv",
+		"data/aerosol_sampling/MARC_{scheme}_aerosol_design_parameterization_results.csv"
+	output:
+		"data/MARC_{scheme}_sampling_data.h5"
+	params:
+		nb="process_original.ipynb",
+		scheme="{scheme}"
+	shell:
+		"exp_name={params.scheme} ./run_notebook.sh {params.nb}"

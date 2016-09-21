@@ -1,0 +1,38 @@
+body {
+    font-family: 'Open Sans', sans-serif;
+    font-size: 12px;
+    font-weight: 400;
+    background-color: #fff;
+    margin-top: 10px;
+}
+#main {
+    width: 700px;
+}
+#sidebar {
+    float: right;
+    width: 100px;
+}
+#sequence {
+    margin-left: 50px;
+    width: 650px;
+    height: 70px;
+}
+#legend {
+    margin-top: 50px;
+    padding: 10px 0 0 3px;
+    visibility: visible;
+}
+#sequence text, #legend text {
+    font-weight: 600;
+    fill: #fff;
+}
+#chart {
+    width: 600px;
+    float: left;
+}
+#chart path {
+    stroke: #fff;
+}
+#percentage {
+    font-size: 2.5em;
+}
